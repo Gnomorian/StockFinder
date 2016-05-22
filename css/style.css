@@ -1,0 +1,141 @@
+* {
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+	margin: 0;
+	padding: 0;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* Importing Fonts */
+
+@font-face {
+    font-family: Delicious;
+    src: url(font/delicious/Delicious-Roman.otf);
+}
+
+@font-face {
+    font-family: Delicious;
+	src: url(font/delicious/Delicious-Bold.otf);
+	font-weight: bold;
+}
+
+@font-face {
+    font-family: Delicious;
+	src: url(font/delicious/Delicious-Italic.otf);
+	font-style: italic;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: block;
+    position: relative;
+}
+
+.pure-button {
+    background-color: #CC0000;
+    color: #fff;
+}
+
+.pure-button-primary {
+    background-color: #333399;
+    color: #fff;
+}
+
+/* HIDEABLE ASIDE */
+.aside {
+    height: 100%;
+    width: 20em;
+    z-index: 2;
+    position: absolute;
+    overflow-y: scroll;
+    top: 0;
+    left: -20em;
+    background-color: rgb(238, 238, 238);
+    border-radius: 2px;
+    
+    -webkit-transition: left 0.5s; /* For Safari 3.1 to 6.0 */
+    transition: left 0.5s;
+}
+
+.aside form {
+    margin: 0 auto;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.aside-controller {
+    position: absolute;
+    top: 0em;
+    left: 0em;
+    z-index: 2;
+    -webkit-transition: left 0.5s; /* For Safari 3.1 to 6.0 */
+    transition: left 0.5s;
+    width: 2em;
+    background-color: red;
+    height: 100%;
+}
+
+.aside-controller button {
+    width: 100%;
+    height: 100%;
+}
+
+.pure-menu-list {
+    margin-left: 4em;
+}
+
+.form-container {
+    display: none;
+    width: 20em;
+    margin: 0 3em;
+}
+
+.form-container-first {
+    display: block;
+}
+/* MAIN CONTENT RESULTS TABLE */
+
+.results {
+    width: 100%;
+    overflow-y: scroll;
+    height: 95%;
+}
+
+.pure-table {
+    min-width: 80%;
+    margin: 0 auto;
+}
+
+.pure-table {
+    margin: 0 auto;
+    background-color: rgb(238, 238, 238);
+}
+
+.pure-table-odd {
+    background-color: #fff;
+}
+
+/* FOOTER */
+.footer {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 5%;
+    background-color: green;
+    
+}
+
+@media screen and (max-width: 30em) {
+    .aside {
+        background-color: black;
+    }
+}
