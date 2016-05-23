@@ -20,6 +20,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	
 	<body onload="slider(document.getElementById('acontroller'), document.getElementById('sidebar'));">
 		<div class="container">
+			<!-- login popup window -->
+			<div class="login-window" onclick="this.style.display = 'none';">
+				<div class="login-form" onclick="event.stopPropagation();">
+					<form id="loginform" method="post" class="pure-form pure-form-stacked">
+						<div class="pure-control-group">
+							<h2 style="text-align: center;">Log In</h2>
+						</div>
+						<div class="pure-control-group">
+				            <label for="username">Username</label>
+				            <input name="username" id="username" type="text" placeholder="">
+				        </div>
+				        <div class="pure-control-group">
+				            <label for="password">Password</label>
+				            <input name="password" id="password" type="password" placeholder="">
+				        </div>
+				        <input name="query" style="display: none;" type="text" value="login"></input>
+				        <div class="pure-controls">
+				            <button form="loginform" type="submit" class="pure-button pure-button-primary">Log In</button>
+				        </div>
+					</form>
+				</div>
+			</div>
+			
 			<!-- contains the name of the site and the form to query the database -->
 			<div id="sidebar" class="aside">
 				
@@ -202,6 +225,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			</div>
 			<div id="acontroller" class="aside-controller">
 				<button class="pure-button" onclick="slider(document.getElementById('acontroller'), document.getElementById('sidebar'));"></button>
+			</div>
+			
+			<!-- headder containing link to login/logout -->
+			<div class="header">
+				<ul>
+					<?php 
+						if(!isset($username)) {
+							echo("<li><button id='login-button' class='pure-button' onclick='showLoginScreen();'>Login</button></li>");
+						}
+						else {
+							echo("<li id='logedin-name'>$username</li><li><button id='logout-button' class='pure-button' onclick='showLogoutScreen();'>Logout</button></li>");
+						}
+					?>
+				</ul>
 			</div>
 			<!-- contains the table of results -->
 			<div class="results">

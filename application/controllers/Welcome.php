@@ -32,8 +32,16 @@ class Welcome extends CI_Controller {
 		$this->load->model('TypeModel', 'types');
 		$types = $this->types->getTypeNames();
 		
+		session_start();
+		
 		if(!isset($_POST['query'])) {
-			$this->load->view('main', array('brands' => $brands, 'types' => $types));
+		
+			if($this->verifyUser()) {
+				$this->load->view('main', array('brands' => $brands, 'types' => $types, 'username' => $_SESSION['username']));
+			}
+			else {
+				$this->load->view('main', array('brands' => $brands, 'types' => $types));
+			}
 			return;
 		}
 		// initalize stock model
@@ -42,17 +50,49 @@ class Welcome extends CI_Controller {
 		switch($_POST['query']) {
 			case "add":
 				// add item to database
-				$this->stock->addItem($data);
-				$this->load->view('main', array('message' => "Item Was Sucessfully Added to the Database", 'brands' => $brands, 'types' => $types));
+				if($this->verifyUser()) {
+					$this->stock->addItem($data);
+					$this->load->view('main', array('message' => "Item Was Sucessfully Added to the Database", 'brands' => $brands, 'types' => $types, 'username' => $_SESSION['username']));
+				}
+				else {
+					$this->load->view('main', array('message' => "you are not Authorised to do this.", 'brands' => $brands, 'types' => $types));
+				}
 				break;
 			case "search":
+				// search database for items matching the query and return a table of results
 				$result = $this->stock->searchItem($data);
-				$this->load->view('main', array('result' => $result, 'brands' => $brands, 'types' => $types));
+				if(isset($_SESSION['username'])) {
+					$this->load->view('main', array('result' => $result, 'brands' => $brands, 'types' => $types, 'username' => $_SESSION['username']));
+				}
+				else {
+					$this->load->view('main', array('result' => $result, 'brands' => $brands, 'types' => $types));
+				}
 				break;
 			case "delete":
 				// delete item from the database
-				$this->stock->deleteItem($data['id']);
-				$this->load->view('main', array('message' => "Item Was Sucessfully Deleted from the Database", 'brands' => $brands, 'types' => $types ));
+				if($this->verifyUser()) {
+					$this->stock->deleteItem($data['id']);
+					$this->load->view('main', array('message' => "Item Was Sucessfully Deleted from the Database", 'brands' => $brands, 'types' => $types ));
+				}
+				else {
+					$this->load->view('main', array('message' => "You are not Authorised to do this.", 'brands' => $brands, 'types' => $types ));
+				}
+				break;
+			case "login":
+				// create session for user
+				if($this->loginUser()) {
+					$_SESSION['username'] = $_POST['username'];
+					$this->load->view('main', array('brands' => $brands, 'types' => $types, 'username' => $_POST['username']));
+				}
+				else {
+					$this->load->view('main', array('brands' => $brands, 'types' => $types, 'message' => "user either doesnt exist or you typed the wrong password."));
+				}
+				
+				break;
+			case "logout":
+				// delete session for user
+				session_destroy();
+				$this->load->view('main', array('brands' => $brands, 'types' => $types));
 				break;
 		}
 	}
@@ -92,7 +132,9 @@ class Welcome extends CI_Controller {
 		
 		return $to;
 	}
-	
+	/**
+	 * assembles the $data to be sent to the database
+	 */
 	private function formatData($data) {
 		if(isset($data['name'])) {
 			$data['name'] = strtolower($data['name']);
@@ -104,5 +146,36 @@ class Welcome extends CI_Controller {
 			$data['colour'] = strtolower($data['colour']);
 		}
 		return $data;
+	}
+	/**
+	 * checks if a user is loged in this session, returns true if there is.
+	 */
+	private function verifyUser() {
+		//TODO: add logic to check if a user is authorised to edit/view something
+		if(isset($_SESSION['username'])) {
+			return true;
+		}
+		return false;
+	}
+	
+	private function loginUser() {
+		$this->load->model('UserModel', 'users');
+		if($this->users->hasUser($_POST['username'], $_POST['password'])) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	private function is_session_started()
+	{
+	    if ( php_sapi_name() !== 'cli' ) {
+	        if ( version_compare(phpversion(), '5.4.0', '>=') ) {
+	            return session_status() === PHP_SESSION_ACTIVE ? TRUE : FALSE;
+	        } else {
+	            return session_id() === '' ? FALSE : TRUE;
+	        }
+	    }
+	    return FALSE;
 	}
 }
