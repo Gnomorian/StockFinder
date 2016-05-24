@@ -18,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		<title></title>
 	</head>
 	
-	<body onload="slider(document.getElementById('acontroller'), document.getElementById('sidebar'));">
+	<body onload="slider(document.getElementById('acontroller'), document.getElementById('sidebar')); loadCookies();">
 		<div class="container">
 			<!-- login popup window -->
 			<div class="login-window" onclick="this.style.display = 'none';">
@@ -48,24 +48,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				
 				<div class="pure-menu pure-menu-horizontal">
 				    <ul class="pure-menu-list">
-				        <li class="pure-menu-item"><button onclick="setTab('tab-1');" class="pure-button">Search</button></li>
-				        <li class="pure-menu-item"><button onclick="setTab('tab-2');" class="pure-button">Add Item</button></li>
+				        <li class="pure-menu-item"><button onclick="setTab('tab-1');" class="pure-button">Add/Search</button></li>
+				        <li class="pure-menu-item"><button onclick="setTab('tab-2');" class="pure-button">About</button></li>
 				    </ul>
 				</div>
 				
 				<div class="form-container form-container-first" id="tab-1">
-					<h1>Search</h1>
-					<form id="searchform" method="post" class="pure-form pure-form-stacked">
+					<h1>Search/Add</h1>
+					<form id="search-add-form" method="post" class="pure-form pure-form-stacked">
 				    <fieldset>
 				    	
 				    	<div class="pure-control-group">
 				            <label for="name">Name</label>
-				            <input name="name" id="name" type="text" placeholder="">
+				            <input name="name" id="name" type="text" placeholder="" onchange="setCookie('name', this.value);">
 				        </div>
 				    	
 				        <div class="pure-control-group">
 				            <label for="brand">Brand</label>
-				            <select name="brand" id="brand" type="combo">
+				            <select name="brand" id="brand" type="combo" onchange="setCookie('brand', this.selectedIndex);">
 				            	<option></option>
 				            	<?php 
 				            		if(isset($brands)) {
@@ -79,7 +79,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				
 				        <div class="pure-control-group">
 				            <label for="Type">Type</label>
-				            <select name="type" id="Type" type="combo">
+				            <select name="type" id="Type" type="combo" onchange="setCookie('type', this.selectedIndex);">
 				            	<option></option>
 				            	<?php 
 				            		if(isset($types)) {
@@ -93,7 +93,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				        
 				        <div class="pure-control-group">
 				            <label for="target">Target</label>
-				            <select name="target" id="target" type="combo">
+				            <select name="target" id="target" type="combo" onchange="setCookie('target', this.selectedIndex);">
 				            	<option></option>
 				            	<option>m</option>
 				            	<option>w</option>
@@ -107,7 +107,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				        
 				        <div class="pure-control-group">
 				            <label for="condition">Condition</label>
-				            <select name="condition" id="condition" type="combo">
+				            <select name="condition" id="condition" type="combo" onchange="setCookie('condition', this.selectedIndex);">
 				            	<option></option>
 				            	<option>mixed</option>
 				            	<option>loose</option>
@@ -127,99 +127,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				        
 				        <div class="pure-control-group">
 				            <label for="location">Location</label>
-				            <input name="location" id="location" type="text" placeholder="e.g. '9L3T = left of isle 9, bay 3 in the tops'">
+				            <input name="location" id="location" type="text">
 				        </div>
 				        
-				        <input name="query" style="display: none;" type="text" value="search"></input>
+				        <input id="add-search-query-field" name="query" style="display: none;" type="text" value="search"></input>
 				
 				        <div class="pure-controls">
-				            <button form="searchform" type="submit" class="pure-button pure-button-primary">Search</button>
+				            <button form="search-add-form" type="submit" class="pure-button pure-button-primary" onclick="setQueryFiled('search');">Search</button>
+				            <button form="search-add-form" type="submit" class="pure-button pure-button-primary" onclick="setQueryFiled('add');">Add</button>
 				        </div>
 				    </fieldset>
 				</form>
 				</div>
 				
 				<div class="form-container" id="tab-2">
-					<h1>Add</h1>
-					<form id="addform" method="post" class="pure-form pure-form-stacked">
-				    <fieldset>
-				    	
-				    	<div class="pure-control-group">
-				            <label for="name">Name</label>
-				            <input name="name" id="name" type="text" placeholder="">
-				        </div>
-				    	
-				        <div class="pure-control-group">
-				            <label for="brand">Brand</label>
-				            <select name="brand" id="brand" type="combo">
-				            	<option></option>
-				            	<?php 
-				            		if(isset($brands)) {
-				            			foreach($brands as $brand) {
-				            				echo('<option>' . $brand->name . '</option>');
-				            			}
-				            		}
-				            	?>
-				            </select>
-				        </div>
-				
-				        <div class="pure-control-group">
-				            <label for="Type">Type</label>
-				            <select name="type" id="Type" type="combo">
-				            	<option></option>
-				            	<?php 
-				            		if(isset($types)) {
-				            			foreach($types as $type) {
-				            				echo('<option>' . $type->name . '</option>');
-				            			}
-				            		}
-				            	?>
-				            </select>
-				        </div>
-				        
-				        <div class="pure-control-group">
-				            <label for="target">Target</label>
-				            <select name="target" id="target" type="combo">
-				            	<option>m</option>
-				            	<option>w</option>
-				            	<option>pb</option>
-				            	<option>pg</option>
-				            	<option>cb</option>
-				            	<option>cg</option>
-				            </select>
-				        </div>
-				        
-				        <div class="pure-control-group">
-				            <label for="condition">Condition</label>
-				            <select name="condition" id="condition" type="combo">
-				            	<option>mixed</option>
-				            	<option>loose</option>
-				            	<option>new</option>
-				            </select>
-				        </div>
-				
-				        <div class="pure-control-group">
-				            <label for="size">Size</label>
-				            <input name="size" id="size" type="text" placeholder="14">
-				        </div>
-				        
-				        <div class="pure-control-group">
-				            <label for="colour">Colour</label>
-				            <input name="colour" id="colour" type="text" placeholder="grn">
-				        </div>
-				        
-				        <div class="pure-control-group">
-				            <label for="location">Location</label>
-				            <input name="location" id="location" type="text" placeholder="e.g. '9L3T = left of isle 9, bay 3 in the tops'">
-				        </div>
-				        
-				        <input name="query" style="display: none;" type="text" value="add"></input>
-				
-				        <div class="pure-controls">
-				            <button form="addform" type="submit" class="pure-button pure-button-primary">Add</button>
-				        </div>
-				    </fieldset>
-				</form>
+					<h1>About</h1>
+					<p>will contain a link to the source code, information about the location codes, use of the site and context for why it has been created.</p>
 				</div>
 				
 			</div>
