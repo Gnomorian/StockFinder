@@ -102,6 +102,11 @@
     display: block;
 }
 
+#tab-2 {
+    padding-right: 2em;
+    margin-left: 1em;
+}
+
 /* HEADER */
 
 .header {

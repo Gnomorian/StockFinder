@@ -142,7 +142,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				
 				<div class="form-container" id="tab-2">
 					<h1>About</h1>
-					<p>will contain a link to the source code, information about the location codes, use of the site and context for why it has been created.</p>
+					<p>this site was created as a means to track boxes of stock in the tops of the shoe isles, as boxes do tend to get hard to find being there is no sorting system beyond "Put the box above the bay it is meant to be in, unless there is no room in which case put it anywhere there is room."<br><br>using this application you add a minimum of the name of the item, and its location.<br><br>location codes are as such: 9T3<br>9 = isle number<br>T = top, replace with 'P' for picking shelf<br>3 = bay number, how many bays in is the box located?<br><br>You can find the source code for this project <a href="https://github.com/Gnomorian/StockFinder">here</a>.
+					</p>
 				</div>
 				
 			</div>
